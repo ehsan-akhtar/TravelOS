@@ -1,8 +1,4 @@
 # TravelOS
-Enterprise-grade multi-agent AI orchestration platform UI built with modern design principles. Features autonomous AI agents, workflow orchestration, execution graphs, observability dashboards, and enterprise SaaS design system.
-
-# Orbit OS
-
 > Enterprise Multi-Agent AI Orchestration Platform
 
 A modern enterprise dashboard that visualizes how autonomous AI agents collaborate to solve complex tasks through orchestration, reasoning, execution, and verification.
