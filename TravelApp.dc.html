@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EDECE8;font-family:system-ui,sans-serif}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes screenIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes checkPop{0%{transform:scale(0.4);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes tickerIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:36px 20px;box-sizing:border-box">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="position:relative;height:100%;background:#F7F8FA;font-family:'DM Sans',system-ui,sans-serif;overflow:hidden">
+
+<sc-if value="{{ sHome }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Home" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.35s ease-out">
+  <div style="flex:1;overflow:auto;padding:8px 20px 130px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:11px;letter-spacing:0.14em;color:#94A3B8;font-weight:600;text-transform:uppercase">Atlas · AI Travel OS</div>
+        <div style="margin-top:4px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:28px;color:#0F172A;letter-spacing:-0.02em">Where to next?</div>
+      </div>
+      <div style="width:40px;height:40px;border-radius:20px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:14px">A</div>
+    </div>
+    <div onClick="{{ navChat }}" style="margin-top:18px;display:flex;align-items:center;gap:11px;background:#FFFFFF;border-radius:22px;padding:15px 16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);cursor:pointer" style-active="transform:scale(0.985)">
+      <span style="width:26px;height:26px;border-radius:13px;background:linear-gradient(135deg,#4F46E5,#7C3AED);flex:none;display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:12px">✦</span>
+      <span style="font-size:14px;color:#94A3B8">What should your AI team accomplish?</span>
+    </div>
+    <div style="margin-top:14px;background:#FFFFFF;border-radius:24px;padding:2px 16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05)">
+      <div onClick="{{ openFrom }}" style="display:flex;align-items:center;gap:12px;padding:14px 0;cursor:pointer">
+        <div style="width:44px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#4F46E5">{{ fromCode }}</div>
+        <div style="flex:1"><div style="font-size:10px;letter-spacing:0.1em;color:#94A3B8;text-transform:uppercase;font-weight:600">From</div><div style="font-size:14px;font-weight:500;color:#0F172A;margin-top:1px">{{ fromCity }}</div></div>
+        <span style="color:#CBD5E1;font-size:17px">›</span>
+      </div>
+      <div style="position:relative;height:1px;background:#F1F4F8">
+        <div onClick="{{ swap }}" style="position:absolute;right:6px;top:-14px;width:28px;height:28px;border-radius:14px;background:#F5F6FA;border:1px solid #E9EDF3;display:flex;align-items:center;justify-content:center;color:#4F46E5;font-size:13px;cursor:pointer">⇅</div>
+      </div>
+      <div onClick="{{ openTo }}" style="display:flex;align-items:center;gap:12px;padding:14px 0;cursor:pointer">
+        <div style="width:44px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#7C3AED">{{ toCode }}</div>
+        <div style="flex:1"><div style="font-size:10px;letter-spacing:0.1em;color:#94A3B8;text-transform:uppercase;font-weight:600">To</div><div style="font-size:14px;font-weight:500;color:#0F172A;margin-top:1px">{{ toCity }}</div></div>
+        <span style="color:#CBD5E1;font-size:17px">›</span>
+      </div>
+      <div style="height:1px;background:#F1F4F8"></div>
+      <div onClick="{{ openCal }}" style="display:flex;align-items:center;gap:12px;padding:14px 0;cursor:pointer">
+        <div style="width:44px;text-align:center;color:#94A3B8;font-size:15px">▦</div>
+        <div style="flex:1"><div style="font-size:10px;letter-spacing:0.1em;color:#94A3B8;text-transform:uppercase;font-weight:600">Dates</div><div style="font-size:14px;font-weight:500;color:#0F172A;margin-top:1px">{{ dateLabel }}</div></div>
+        <span style="color:#CBD5E1;font-size:17px">›</span>
+      </div>
+      <div style="height:1px;background:#F1F4F8"></div>
+      <div onClick="{{ openPax }}" style="display:flex;align-items:center;gap:12px;padding:14px 0;cursor:pointer">
+        <div style="width:44px;text-align:center;color:#94A3B8;font-size:15px">◉</div>
+        <div style="flex:1"><div style="font-size:10px;letter-spacing:0.1em;color:#94A3B8;text-transform:uppercase;font-weight:600">Travelers</div><div style="font-size:14px;font-weight:500;color:#0F172A;margin-top:1px">{{ paxLabel }}</div></div>
+        <span style="color:#CBD5E1;font-size:17px">›</span>
+      </div>
+      <div style="display:flex;gap:8px;padding:4px 0 16px;flex-wrap:wrap">
+        <sc-for list="{{ timeChips }}" as="c" hint-placeholder-count="4">
+          <span onClick="{{ c.onTap }}" style="padding:7px 13px;border-radius:14px;background:{{ c.bg }};color:{{ c.color }};font-size:12px;font-weight:600;cursor:pointer;transition:background 0.2s,color 0.2s">{{ c.label }}</span>
+        </sc-for>
+      </div>
+    </div>
+    <div onClick="{{ searchGo }}" style="margin-top:14px;height:54px;border-radius:27px;background:#4F46E5;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16px;box-shadow:0 10px 24px rgba(79,70,229,0.28);cursor:pointer" style-active="transform:scale(0.98)">Search with AI team</div>
+    <div style="margin-top:24px;font-size:11px;letter-spacing:0.12em;color:#94A3B8;font-weight:600;text-transform:uppercase">Suggested requests</div>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ suggested }}" as="sg" hint-placeholder-count="3">
+        <div onClick="{{ sg.onTap }}" style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border-radius:16px;padding:12px 14px;box-shadow:0 1px 2px rgba(15,23,42,0.04);cursor:pointer" style-active="transform:scale(0.985)">
+          <span style="color:#7C3AED;font-size:12px;flex:none">✦</span>
+          <span style="font-size:13px;color:#334155;flex:1">{{ sg.text }}</span>
+          <span style="color:#CBD5E1;font-size:15px">›</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sChat }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="AI Concierge Chat" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;background:#F7F8FA;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 10px;display:flex;align-items:center;gap:12px;flex:none">
+    <div onClick="{{ navHome }}" style="width:32px;height:32px;border-radius:16px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;color:#334155;font-size:15px;cursor:pointer">←</div>
+    <div style="flex:1">
+      <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:17px;color:#0F172A">AI Concierge</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#64748B"><span style="width:6px;height:6px;border-radius:3px;background:#22C55E;animation:pulseDot 1.6s ease-in-out infinite"></span>Flight team online</div>
+    </div>
+    <div style="width:32px;height:32px;border-radius:16px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:13px">✦</div>
+  </div>
+  <div ref="{{ chatRef }}" style="flex:1;overflow:auto;padding:8px 20px 12px">
+    <div style="display:{{ chatEmptyDisplay }};flex-direction:column;gap:8px;padding-top:16px">
+      <div style="font-size:13px;color:#94A3B8;text-align:center;padding:0 30px;line-height:1.5">Describe the trip in your own words — the team will parse it, plan it and book it.</div>
+      <sc-for list="{{ suggested }}" as="sg2" hint-placeholder-count="3">
+        <div onClick="{{ sg2.onSend }}" style="align-self:center;background:#FFFFFF;border:1px solid #E9EDF3;border-radius:16px;padding:9px 14px;font-size:12.5px;color:#4F46E5;font-weight:500;cursor:pointer" style-active="transform:scale(0.97)">{{ sg2.text }}</div>
+      </sc-for>
+    </div>
+    <sc-for list="{{ messages }}" as="m" hint-placeholder-count="2">
+      <div style="display:flex;justify-content:{{ m.just }};padding:5px 0;animation:tickerIn 0.3s ease-out">
+        <div style="max-width:82%;background:{{ m.bg }};color:{{ m.color }};border-radius:{{ m.rad }};padding:11px 14px;font-size:13.5px;line-height:1.45;box-shadow:{{ m.shadow }}">
+          <span>{{ m.text }}</span>
+          <div style="display:{{ m.slotsDisplay }};flex-wrap:wrap;gap:6px;margin-top:10px">
+            <sc-for list="{{ m.slots }}" as="sl" hint-placeholder-count="3">
+              <span style="background:rgba(79,70,229,0.08);color:#4F46E5;border-radius:10px;padding:5px 9px;font-size:11.5px;font-weight:600">{{ sl }}</span>
+            </sc-for>
+          </div>
+          <div onClick="{{ m.launch }}" style="display:{{ m.launchDisplay }};margin-top:12px;height:42px;border-radius:21px;background:#4F46E5;color:#FFFFFF;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:13.5px;cursor:pointer" style-active="transform:scale(0.98)">Launch AI team →</div>
+        </div>
+      </div>
+    </sc-for>
+    <div style="display:{{ typingDisplay }};padding:5px 0">
+      <div style="background:#FFFFFF;border-radius:18px 18px 18px 6px;padding:13px 16px;box-shadow:0 1px 2px rgba(15,23,42,0.05);display:flex;gap:5px;align-items:center">
+        <span style="width:7px;height:7px;border-radius:4px;background:#A5B4FC;animation:pulseDot 1s ease-in-out infinite"></span>
+        <span style="width:7px;height:7px;border-radius:4px;background:#A5B4FC;animation:pulseDot 1s ease-in-out 0.2s infinite"></span>
+        <span style="width:7px;height:7px;border-radius:4px;background:#A5B4FC;animation:pulseDot 1s ease-in-out 0.4s infinite"></span>
+      </div>
+    </div>
+  </div>
+  <div style="padding:10px 16px 30px;display:flex;gap:10px;flex:none;background:linear-gradient(180deg,rgba(247,248,250,0),#F7F8FA 35%)">
+    <input value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Message your AI team…" style="flex:1;height:48px;border-radius:24px;border:1px solid #E9EDF3;background:#FFFFFF;padding:0 18px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0F172A;outline:none;box-sizing:border-box">
+    <div onClick="{{ sendChat }}" style="width:48px;height:48px;border-radius:24px;background:{{ sendBg }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:background 0.25s;flex:none" style-active="transform:scale(0.94)">→</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sRun }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="AI Team Run" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 22px 0;flex:none">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#94A3B8;font-weight:600">AI team working</div>
+      <div onClick="{{ navHome }}" style="font-size:12px;font-weight:600;color:#94A3B8;cursor:pointer;padding:6px 10px;border-radius:12px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.06)">Cancel</div>
+    </div>
+    <div style="margin-top:8px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:24px;color:#0F172A;letter-spacing:-0.01em">{{ runRoute }}</div>
+    <div style="margin-top:3px;font-size:13px;color:#64748B">{{ runSub }}</div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <sc-for list="{{ runAgents }}" as="ra" hint-placeholder-count="4">
+        <div style="width:44px;height:44px;border-radius:22px;background:{{ ra.bg }};color:{{ ra.color }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:12px;animation:{{ ra.anim }}">{{ ra.short }}</div>
+      </sc-for>
+    </div>
+    <div style="margin-top:18px;height:4px;border-radius:2px;background:#E9EDF3;overflow:hidden"><div style="height:100%;border-radius:2px;background:linear-gradient(90deg,#4F46E5,#7C3AED);width:{{ runBarW }};transition:width 0.3s linear"></div></div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:20px 22px 30px">
+    <sc-for list="{{ runTasks }}" as="s" hint-placeholder-count="5">
+      <div style="display:flex;gap:14px;opacity:{{ s.rowOp }};transition:opacity 0.5s">
+        <div style="display:flex;flex-direction:column;align-items:center;width:26px;flex:none">
+          <span style="display:{{ s.showDone }};width:26px;height:26px;border-radius:13px;background:#4F46E5;color:#FFFFFF;font-size:12px;align-items:center;justify-content:center;flex:none">✓</span>
+          <span style="display:{{ s.showRun }};width:26px;height:26px;border-radius:13px;border:2.5px solid #4F46E5;border-top-color:transparent;box-sizing:border-box;animation:spin 0.9s linear infinite;flex:none"></span>
+          <span style="display:{{ s.showQueue }};width:26px;height:26px;border-radius:13px;border:2px solid #D6DEE8;box-sizing:border-box;flex:none"></span>
+          <div style="flex:1;width:2px;min-height:14px;margin:3px 0;border-radius:1px;background:{{ s.railColor }};display:{{ s.railDisplay }}"></div>
+        </div>
+        <div style="flex:1;padding-bottom:14px">
+          <div style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14.5px;color:#0F172A">{{ s.label }}</div>
+          <div style="margin-top:2px;font-size:12.5px;color:#64748B">{{ s.sub }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sResults }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Flight Results" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 10px;flex:none">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div onClick="{{ resBack }}" style="width:32px;height:32px;border-radius:16px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;color:#334155;font-size:15px;cursor:pointer;flex:none">←</div>
+      <div style="flex:1">
+        <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:19px;color:#0F172A">{{ resFrom }} → {{ resTo }}</div>
+        <div style="font-size:12px;color:#64748B">{{ legLabel }} · {{ resDate }} · {{ paxShort }}</div>
+      </div>
+      <div style="font-size:11px;font-weight:600;color:#16A34A;background:rgba(34,197,94,0.1);border-radius:11px;padding:5px 9px;flex:none">{{ resCount }} fares</div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <sc-for list="{{ sortChips }}" as="sc" hint-placeholder-count="3">
+        <span onClick="{{ sc.onTap }}" style="padding:7px 13px;border-radius:14px;background:{{ sc.bg }};color:{{ sc.color }};font-size:12px;font-weight:600;cursor:pointer;transition:background 0.2s,color 0.2s">{{ sc.label }}</span>
+      </sc-for>
+    </div>
+    <div style="display:{{ outChipDisplay }};margin-top:10px;align-items:center;gap:8px;background:rgba(79,70,229,0.07);border-radius:14px;padding:9px 12px">
+      <span style="font-size:11px;font-weight:700;color:#4F46E5;flex:none">OUTBOUND ✓</span>
+      <span style="font-size:12px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ outChipText }}</span>
+    </div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:4px 20px 40px;display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ flights }}" as="f" hint-placeholder-count="4">
+      <div onClick="{{ f.onTap }}" style="background:#FFFFFF;border-radius:20px;padding:14px 16px;box-shadow:{{ f.shadow }};cursor:pointer;border:{{ f.border }};flex:none" style-active="transform:scale(0.985)">
+        <div style="display:{{ f.pickDisplay }};align-items:center;gap:8px;margin-bottom:10px">
+          <span style="background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#FFFFFF;border-radius:10px;padding:4px 9px;font-size:10.5px;font-weight:700">✦ AI pick · {{ f.conf }}% match</span>
+          <span onClick="{{ f.whyTap }}" style="margin-left:auto;color:#4F46E5;font-size:11.5px;font-weight:600;cursor:pointer">Why?</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:38px;height:38px;border-radius:12px;background:{{ f.alBg }};color:{{ f.alColor }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:12px;flex:none">{{ f.alShort }}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16.5px;color:#0F172A;font-variant-numeric:tabular-nums">{{ f.dep }} — {{ f.arr }}<span style="font-size:10px;color:#94A3B8;font-weight:600"> {{ f.plus1 }}</span></div>
+            <div style="margin-top:2px;font-size:12px;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.alName }} · {{ f.durL }} · {{ f.stopsL }}</div>
+          </div>
+          <div style="text-align:right;flex:none">
+            <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:17px;color:#0F172A">€{{ f.price }}</div>
+            <div style="font-size:10.5px;color:#94A3B8">per person</div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+    <div style="display:{{ resEmptyDisplay }};flex-direction:column;align-items:center;gap:8px;padding:40px 20px;color:#94A3B8;font-size:13px;text-align:center">No fares match that time window.<br>Try a different time preference.</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sFare }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Choose Fare" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 10px;display:flex;align-items:center;gap:12px;flex:none">
+    <div onClick="{{ fareBack }}" style="width:32px;height:32px;border-radius:16px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;color:#334155;font-size:15px;cursor:pointer">←</div>
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:19px;color:#0F172A">Choose your fare</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:4px 20px 40px">
+    <div style="background:#FFFFFF;border-radius:20px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05)">
+      <div style="font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">Selected flights</div>
+      <div style="margin-top:8px;font-size:13px;color:#0F172A;font-weight:500">{{ selOutText }}</div>
+      <div style="display:{{ selRetDisplay }};margin-top:5px;font-size:13px;color:#0F172A;font-weight:500">{{ selRetText }}</div>
+    </div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ fares }}" as="fa" hint-placeholder-count="3">
+        <div onClick="{{ fa.onTap }}" style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);cursor:pointer;border:{{ fa.border }}" style-active="transform:scale(0.985)">
+          <div style="display:flex;align-items:baseline;justify-content:space-between">
+            <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#0F172A">{{ fa.name }}</div>
+            <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#4F46E5">{{ fa.priceLabel }}</div>
+          </div>
+          <div style="margin-top:9px;display:flex;flex-direction:column;gap:5px">
+            <sc-for list="{{ fa.feats }}" as="ft" hint-placeholder-count="3">
+              <div style="display:flex;gap:8px;font-size:12.5px;color:#64748B;align-items:center"><span style="color:#22C55E;font-size:11px">✓</span><span>{{ ft }}</span></div>
+            </sc-for>
+          </div>
+          <div style="margin-top:12px;height:40px;border-radius:20px;background:{{ fa.btnBg }};color:{{ fa.btnColor }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:13.5px">{{ fa.btnLabel }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sPax }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Passenger Details" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 10px;display:flex;align-items:center;gap:12px;flex:none">
+    <div onClick="{{ paxBack }}" style="width:32px;height:32px;border-radius:16px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;color:#334155;font-size:15px;cursor:pointer">←</div>
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:19px;color:#0F172A">Traveler details</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:4px 20px 20px;display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ travForms }}" as="tv" hint-placeholder-count="2">
+      <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);flex:none">
+        <div style="font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">{{ tv.label }}</div>
+        <div style="margin-top:10px;display:flex;gap:10px">
+          <input value="{{ tv.first }}" onChange="{{ tv.onFirst }}" placeholder="First name" style="flex:1;min-width:0;height:46px;border-radius:14px;border:1px solid #E9EDF3;background:#FAFBFC;padding:0 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0F172A;outline:none;box-sizing:border-box">
+          <input value="{{ tv.last }}" onChange="{{ tv.onLast }}" placeholder="Last name" style="flex:1;min-width:0;height:46px;border-radius:14px;border:1px solid #E9EDF3;background:#FAFBFC;padding:0 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0F172A;outline:none;box-sizing:border-box">
+        </div>
+      </div>
+    </sc-for>
+    <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);flex:none">
+      <div style="font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">Contact</div>
+      <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="Email for e-tickets" style="margin-top:10px;width:100%;height:46px;border-radius:14px;border:1px solid #E9EDF3;background:#FAFBFC;padding:0 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0F172A;outline:none;box-sizing:border-box">
+    </div>
+  </div>
+  <div style="padding:10px 20px 30px;flex:none">
+    <div onClick="{{ paxContinue }}" style="height:54px;border-radius:27px;background:{{ paxBtnBg }};color:{{ paxBtnColor }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16px;cursor:pointer;transition:background 0.3s" style-active="transform:scale(0.98)">Continue to review</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sReview }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Review and Pay" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 10px;display:flex;align-items:center;gap:12px;flex:none">
+    <div onClick="{{ reviewBack }}" style="width:32px;height:32px;border-radius:16px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;color:#334155;font-size:15px;cursor:pointer">←</div>
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:19px;color:#0F172A">Review &amp; pay</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:4px 20px 20px;display:flex;flex-direction:column;gap:12px">
+    <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);flex:none">
+      <div style="font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">Itinerary</div>
+      <div style="margin-top:8px;font-size:13px;color:#0F172A;font-weight:500">{{ selOutText }}</div>
+      <div style="display:{{ selRetDisplay }};margin-top:5px;font-size:13px;color:#0F172A;font-weight:500">{{ selRetText }}</div>
+      <div style="margin-top:8px;font-size:12px;color:#64748B">{{ reviewPaxLine }}</div>
+    </div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);flex:none">
+      <div style="font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">Price</div>
+      <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ priceLines }}" as="pl" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:{{ pl.color }}"><span>{{ pl.label }}</span><span style="font-variant-numeric:tabular-nums;font-weight:{{ pl.fw }}">{{ pl.value }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:{{ dropDisplay }};margin-top:10px;align-items:center;gap:7px;background:rgba(34,197,94,0.09);border-radius:12px;padding:8px 11px;font-size:12px;color:#16A34A;font-weight:600;animation:tickerIn 0.4s ease-out">↓ Price watch applied — fare dropped €12</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #F1F4F8;display:flex;justify-content:space-between;align-items:baseline">
+        <span style="font-size:13px;color:#64748B">Total</span>
+        <span style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:22px;color:#0F172A;font-variant-numeric:tabular-nums;transition:color 0.3s">€{{ totalLabel }}</span>
+      </div>
+    </div>
+    <div style="background:#FFFFFF;border-radius:20px;padding:14px 16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);display:flex;align-items:center;gap:12px;flex:none">
+      <div style="width:38px;height:26px;border-radius:6px;background:#0F172A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex:none">VISA</div>
+      <div style="flex:1;font-size:13.5px;color:#0F172A;font-weight:500">Visa ·· 4242</div>
+      <span style="color:#CBD5E1;font-size:15px">›</span>
+    </div>
+  </div>
+  <div style="padding:10px 20px 30px;flex:none">
+    <div onClick="{{ confirmPay }}" style="height:54px;border-radius:27px;background:#4F46E5;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16px;box-shadow:0 10px 24px rgba(79,70,229,0.28);cursor:pointer" style-active="transform:scale(0.98)">Confirm &amp; pay €{{ totalLabel }}</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sConfirm }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Booking Confirmed" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="flex:1;overflow:auto;padding:20px 24px 30px;display:flex;flex-direction:column;align-items:center">
+    <div style="width:72px;height:72px;border-radius:36px;background:rgba(34,197,94,0.12);display:flex;align-items:center;justify-content:center;animation:checkPop 0.5s cubic-bezier(0.34,1.56,0.64,1)">
+      <div style="width:44px;height:44px;border-radius:22px;background:#22C55E;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px">✓</div>
+    </div>
+    <div style="margin-top:16px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:24px;color:#0F172A">Booking confirmed</div>
+    <div style="margin-top:5px;font-size:13px;color:#64748B">QA agent verified · e-tickets sent to {{ email }}</div>
+    <div style="margin-top:22px;width:100%;background:#FFFFFF;border-radius:24px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 12px 32px rgba(15,23,42,0.08);overflow:hidden;box-sizing:border-box">
+      <div style="padding:18px 20px 14px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;letter-spacing:0.12em;color:#94A3B8;font-weight:600;text-transform:uppercase">Booking ref</span>
+          <span style="font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:15px;color:#4F46E5;letter-spacing:0.08em">{{ pnr }}</span>
+        </div>
+        <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:26px;color:#0F172A">{{ confFrom }}</div>
+          <div style="flex:1;margin:0 12px;height:1.5px;background:repeating-linear-gradient(90deg,#CBD5E1 0 6px,transparent 6px 12px);position:relative"><span style="position:absolute;left:50%;top:-8px;transform:translateX(-50%);color:#4F46E5;font-size:13px">✈</span></div>
+          <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:26px;color:#0F172A">{{ confTo }}</div>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:12px;color:#64748B"><span>{{ confDates }}</span><span>{{ confPax }}</span></div>
+      </div>
+      <div style="border-top:1.5px dashed #E9EDF3;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+        <div style="height:30px;flex:1;margin-right:16px;background:repeating-linear-gradient(90deg,#0F172A 0 2px,transparent 2px 5px,#0F172A 5px 6px,transparent 6px 11px);border-radius:2px;opacity:0.8"></div>
+        <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#0F172A;flex:none">€{{ totalLabel }}</div>
+      </div>
+    </div>
+    <div onClick="{{ goTrips }}" style="margin-top:20px;width:100%;height:52px;border-radius:26px;background:#4F46E5;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;box-sizing:border-box" style-active="transform:scale(0.98)">View my trips</div>
+    <div onClick="{{ newSearch }}" style="margin-top:10px;width:100%;height:52px;border-radius:26px;background:#FFFFFF;color:#334155;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;cursor:pointer;box-shadow:0 1px 3px rgba(15,23,42,0.06);box-sizing:border-box" style-active="transform:scale(0.98)">Start a new search</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sTrips }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Trips" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 12px;flex:none">
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:24px;color:#0F172A;letter-spacing:-0.01em">Trips</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:2px 20px 130px;display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ bookingCards }}" as="b" hint-placeholder-count="1">
+      <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);flex:none">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:17px;color:#0F172A">{{ b.route }}</span>
+          <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:#4F46E5;letter-spacing:0.06em">{{ b.pnr }}</span>
+        </div>
+        <div style="margin-top:5px;font-size:12.5px;color:#64748B">{{ b.dates }} · {{ b.pax }}</div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;font-weight:700;color:#16A34A;background:rgba(34,197,94,0.1);border-radius:10px;padding:4px 9px">Confirmed ✓</span>
+          <span style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:14px;color:#0F172A">€{{ b.total }}</span>
+        </div>
+      </div>
+    </sc-for>
+    <div style="display:{{ tripsEmptyDisplay }};flex-direction:column;align-items:center;gap:10px;padding:60px 30px;text-align:center">
+      <div style="width:56px;height:56px;border-radius:28px;background:#EEF0F5;display:flex;align-items:center;justify-content:center;font-size:20px;color:#94A3B8">✈</div>
+      <div style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;color:#334155">No trips yet</div>
+      <div style="font-size:12.5px;color:#94A3B8;line-height:1.5">Book your first flight and it will land here with live updates from your AI team.</div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sActivity }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Activity" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:64px;box-sizing:border-box;animation:screenIn 0.3s ease-out">
+  <div style="padding:6px 20px 12px;flex:none">
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:24px;color:#0F172A;letter-spacing:-0.01em">Activity</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:2px 20px 130px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ notifCards }}" as="n" hint-placeholder-count="4">
+      <div style="display:flex;align-items:center;gap:12px;background:#FFFFFF;border-radius:16px;padding:12px 14px;box-shadow:0 1px 2px rgba(15,23,42,0.04);flex:none;animation:tickerIn 0.3s ease-out">
+        <span style="width:28px;height:28px;border-radius:14px;background:{{ n.iconBg }};color:{{ n.iconColor }};display:flex;align-items:center;justify-content:center;font-size:12px;flex:none">{{ n.icon }}</span>
+        <span style="flex:1;font-size:13px;color:#334155;line-height:1.4">{{ n.text }}</span>
+        <span style="font-size:11px;color:#94A3B8;font-variant-numeric:tabular-nums;flex:none">{{ n.time }}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<div style="position:absolute;left:0;right:0;bottom:0;display:{{ tabDisplay }};justify-content:center;gap:10px;padding:12px 20px 36px;background:rgba(247,248,250,0.82);backdrop-filter:blur(16px);border-top:1px solid rgba(15,23,42,0.05);z-index:15">
+  <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+    <div onClick="{{ tb.onTap }}" style="padding:9px 20px;border-radius:18px;background:{{ tb.bg }};color:{{ tb.color }};font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:background 0.25s,color 0.25s" style-active="transform:scale(0.95)">{{ tb.label }}</div>
+  </sc-for>
+</div>
+
+<div style="position:absolute;left:50%;bottom:110px;transform:translateX(-50%) translateY({{ toastTy }});background:#0F172A;color:#F8FAFC;border-radius:16px;padding:11px 16px;font-size:12.5px;font-weight:500;box-shadow:0 12px 32px rgba(15,23,42,0.3);white-space:nowrap;opacity:{{ toastOp }};transition:opacity 0.4s,transform 0.4s;pointer-events:none;z-index:40">{{ toastText }}</div>
+
+<div style="position:absolute;inset:0;background:rgba(15,23,42,{{ cityBd }});transition:background 0.35s;pointer-events:{{ cityPe }};z-index:25" onClick="{{ closeSheet }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:28px 28px 0 0;padding:18px 20px 34px;transform:translateY({{ cityTy }});transition:transform 0.42s cubic-bezier(0.32,0.72,0,1);z-index:26;box-shadow:0 -12px 40px rgba(15,23,42,0.14)">
+  <div style="width:36px;height:4px;border-radius:2px;background:#E2E8F0;margin:0 auto 14px"></div>
+  <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:18px;color:#0F172A">{{ cityTitle }}</div>
+  <input value="{{ cityQuery }}" onChange="{{ onCityQuery }}" placeholder="Search city or airport" style="margin-top:12px;width:100%;height:46px;border-radius:14px;border:1px solid #E9EDF3;background:#FAFBFC;padding:0 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:#0F172A;outline:none;box-sizing:border-box">
+  <div style="margin-top:10px;max-height:340px;overflow:auto">
+    <sc-for list="{{ cityList }}" as="ct" hint-placeholder-count="5">
+      <div onClick="{{ ct.onTap }}" style="display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #F5F6FA;cursor:pointer">
+        <div style="width:44px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:14px;color:#4F46E5">{{ ct.code }}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:500;color:#0F172A">{{ ct.city }}</div><div style="font-size:11.5px;color:#94A3B8">{{ ct.country }}</div></div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div style="position:absolute;inset:0;background:rgba(15,23,42,{{ calBd }});transition:background 0.35s;pointer-events:{{ calPe }};z-index:25" onClick="{{ closeSheet }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:28px 28px 0 0;padding:18px 20px 30px;transform:translateY({{ calTy }});transition:transform 0.42s cubic-bezier(0.32,0.72,0,1);z-index:26;box-shadow:0 -12px 40px rgba(15,23,42,0.14)">
+  <div style="width:36px;height:4px;border-radius:2px;background:#E2E8F0;margin:0 auto 14px"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:18px;color:#0F172A">Dates</div>
+    <div style="display:flex;gap:8px">
+      <span onClick="{{ setRT }}" style="padding:6px 12px;border-radius:12px;background:{{ rtBg }};color:{{ rtColor }};font-size:12px;font-weight:600;cursor:pointer">Round trip</span>
+      <span onClick="{{ setOW }}" style="padding:6px 12px;border-radius:12px;background:{{ owBg }};color:{{ owColor }};font-size:12px;font-weight:600;cursor:pointer">One way</span>
+    </div>
+  </div>
+  <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+    <div onClick="{{ prevM }}" style="width:30px;height:30px;border-radius:15px;background:#F5F6FA;display:flex;align-items:center;justify-content:center;color:#334155;cursor:pointer;font-size:14px">‹</div>
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;color:#0F172A">{{ monthLabel }}</div>
+    <div onClick="{{ nextM }}" style="width:30px;height:30px;border-radius:15px;background:#F5F6FA;display:flex;align-items:center;justify-content:center;color:#334155;cursor:pointer;font-size:14px">›</div>
+  </div>
+  <div style="margin-top:10px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:10.5px;color:#94A3B8;text-align:center;font-weight:600">
+    <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+  </div>
+  <div style="margin-top:4px;display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+    <sc-for list="{{ calCells }}" as="cc" hint-placeholder-count="35">
+      <div onClick="{{ cc.onTap }}" style="height:38px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:{{ cc.fw }};color:{{ cc.color }};background:{{ cc.bg }};border-radius:{{ cc.rad }};cursor:pointer;transition:background 0.15s">{{ cc.t }}</div>
+    </sc-for>
+  </div>
+  <div style="margin-top:10px;font-size:12.5px;color:#64748B;text-align:center">{{ calHint }}</div>
+  <div onClick="{{ closeSheet }}" style="margin-top:12px;height:48px;border-radius:24px;background:#4F46E5;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer" style-active="transform:scale(0.98)">Done</div>
+</div>
+
+<div style="position:absolute;inset:0;background:rgba(15,23,42,{{ paxBd }});transition:background 0.35s;pointer-events:{{ paxPe }};z-index:25" onClick="{{ closeSheet }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:28px 28px 0 0;padding:18px 20px 34px;transform:translateY({{ paxTy }});transition:transform 0.42s cubic-bezier(0.32,0.72,0,1);z-index:26;box-shadow:0 -12px 40px rgba(15,23,42,0.14)">
+  <div style="width:36px;height:4px;border-radius:2px;background:#E2E8F0;margin:0 auto 14px"></div>
+  <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:18px;color:#0F172A">Travelers &amp; cabin</div>
+  <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+    <div><div style="font-size:14px;font-weight:500;color:#0F172A">Adults</div><div style="font-size:11.5px;color:#94A3B8">12+ years</div></div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div onClick="{{ adultsMinus }}" style="width:34px;height:34px;border-radius:17px;background:#F5F6FA;display:flex;align-items:center;justify-content:center;color:#334155;cursor:pointer;font-size:16px">−</div>
+      <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#0F172A;min-width:18px;text-align:center">{{ adults }}</div>
+      <div onClick="{{ adultsPlus }}" style="width:34px;height:34px;border-radius:17px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;color:#4F46E5;cursor:pointer;font-size:16px">+</div>
+    </div>
+  </div>
+  <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+    <div><div style="font-size:14px;font-weight:500;color:#0F172A">Children</div><div style="font-size:11.5px;color:#94A3B8">2–11 years</div></div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div onClick="{{ childMinus }}" style="width:34px;height:34px;border-radius:17px;background:#F5F6FA;display:flex;align-items:center;justify-content:center;color:#334155;cursor:pointer;font-size:16px">−</div>
+      <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:16px;color:#0F172A;min-width:18px;text-align:center">{{ children }}</div>
+      <div onClick="{{ childPlus }}" style="width:34px;height:34px;border-radius:17px;background:#EEF0FE;display:flex;align-items:center;justify-content:center;color:#4F46E5;cursor:pointer;font-size:16px">+</div>
+    </div>
+  </div>
+  <div style="margin-top:16px;font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">Cabin</div>
+  <div style="margin-top:8px;display:flex;gap:8px">
+    <sc-for list="{{ cabinChips }}" as="cb" hint-placeholder-count="3">
+      <span onClick="{{ cb.onTap }}" style="padding:8px 14px;border-radius:14px;background:{{ cb.bg }};color:{{ cb.color }};font-size:12.5px;font-weight:600;cursor:pointer;transition:background 0.2s,color 0.2s">{{ cb.label }}</span>
+    </sc-for>
+  </div>
+  <div onClick="{{ closeSheet }}" style="margin-top:18px;height:48px;border-radius:24px;background:#4F46E5;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer" style-active="transform:scale(0.98)">Done</div>
+</div>
+
+<div style="position:absolute;inset:0;background:rgba(15,23,42,{{ whyBd }});transition:background 0.35s;pointer-events:{{ whyPe }};z-index:25" onClick="{{ closeSheet }}"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:28px 28px 0 0;padding:18px 20px 34px;transform:translateY({{ whyTy }});transition:transform 0.42s cubic-bezier(0.32,0.72,0,1);z-index:26;box-shadow:0 -12px 40px rgba(15,23,42,0.14)">
+  <div style="width:36px;height:4px;border-radius:2px;background:#E2E8F0;margin:0 auto 14px"></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#FFFFFF;border-radius:10px;padding:4px 9px;font-size:10.5px;font-weight:700">✦ AI pick</span>
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:18px;color:#0F172A">Why this flight?</div>
+  </div>
+  <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
+    <div style="flex:1;height:6px;border-radius:3px;background:#EEF0F5;overflow:hidden"><div style="height:100%;border-radius:3px;background:linear-gradient(90deg,#4F46E5,#7C3AED);width:{{ whyConfW }}"></div></div>
+    <span style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:14px;color:#4F46E5">{{ whyConf }}% match</span>
+  </div>
+  <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px">
+    <sc-for list="{{ whyReasons }}" as="wr" hint-placeholder-count="4">
+      <div style="display:flex;gap:9px;font-size:13px;color:#334155;line-height:1.4;align-items:flex-start"><span style="color:#22C55E;font-size:12px;margin-top:1px">✓</span><span>{{ wr }}</span></div>
+    </sc-for>
+  </div>
+  <div style="margin-top:14px;background:#FAFBFC;border-radius:14px;padding:12px 14px">
+    <div style="font-size:11px;letter-spacing:0.1em;color:#94A3B8;font-weight:600;text-transform:uppercase">Rejected alternatives</div>
+    <sc-for list="{{ whyRejected }}" as="wj" hint-placeholder-count="2">
+      <div style="margin-top:8px;display:flex;gap:9px;font-size:12.5px;color:#64748B;line-height:1.4;align-items:flex-start"><span style="color:#EF4444;font-size:11px;margin-top:1px">✕</span><span>{{ wj }}</span></div>
+    </sc-for>
+  </div>
+  <div style="margin-top:12px;font-size:11.5px;color:#94A3B8;text-align:center">128 fares considered · 7 shortlisted · verified {{ whyTs }}</div>
+</div>
+
+<div style="position:absolute;inset:0;display:{{ procDisplay }};align-items:center;justify-content:center;background:rgba(15,23,42,0.45);backdrop-filter:blur(6px);z-index:50">
+  <div style="background:#FFFFFF;border-radius:24px;padding:24px 24px 20px;width:280px;box-shadow:0 24px 60px rgba(15,23,42,0.3);animation:screenIn 0.3s ease-out">
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:17px;color:#0F172A">Booking in progress</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ procSteps }}" as="ps" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:11px;opacity:{{ ps.op }};transition:opacity 0.4s">
+          <span style="display:{{ ps.showDone }};width:22px;height:22px;border-radius:11px;background:#22C55E;color:#FFFFFF;font-size:10px;align-items:center;justify-content:center;flex:none">✓</span>
+          <span style="display:{{ ps.showRun }};width:22px;height:22px;border-radius:11px;border:2.5px solid #4F46E5;border-top-color:transparent;box-sizing:border-box;animation:spin 0.9s linear infinite;flex:none"></span>
+          <span style="display:{{ ps.showQueue }};width:22px;height:22px;border-radius:11px;border:2px solid #E2E8F0;box-sizing:border-box;flex:none"></span>
+          <span style="font-size:13px;color:#334155;font-weight:500">{{ ps.label }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    now: Date.now(),
+    screen: 'home',
+    from: 'JFK', to: 'CDG',
+    depart: '2026-09-14', ret: '2026-09-21', oneWay: false,
+    adults: 2, children: 0, cabin: 'Economy', timePref: 'Any',
+    calY: 2026, calM: 8,
+    sheet: null, cityQuery: '',
+    messages: [], chatInput: '', typingUntil: 0, pendingReply: null,
+    runStart: 0,
+    leg: 1, selOut: null, selRet: null, sort: 'ai',
+    fare: null,
+    travelers: [], email: 'alex.rivera@example.com',
+    reviewStart: 0, dropApplied: false,
+    procStart: 0,
+    bookings: [],
+    notifs: [
+      { time: '09:12', text: 'Price watch armed for Paris routes', icon: '◉', k: 'info' },
+      { time: '08:47', text: 'Weather agent: mild September in Western Europe', icon: '✦', k: 'info' }
+    ],
+    toastMsg: '', toastUntil: 0,
+    pnr: '', lastTotal: 0,
+    whyFlight: null
+  };
+
+  CITIES = [
+    { code: 'JFK', city: 'New York', country: 'United States' },
+    { code: 'CDG', city: 'Paris', country: 'France' },
+    { code: 'LHR', city: 'London', country: 'United Kingdom' },
+    { code: 'HND', city: 'Tokyo', country: 'Japan' },
+    { code: 'FCO', city: 'Rome', country: 'Italy' },
+    { code: 'BCN', city: 'Barcelona', country: 'Spain' },
+    { code: 'LIS', city: 'Lisbon', country: 'Portugal' },
+    { code: 'AMS', city: 'Amsterdam', country: 'Netherlands' },
+    { code: 'BER', city: 'Berlin', country: 'Germany' },
+    { code: 'DXB', city: 'Dubai', country: 'UAE' },
+    { code: 'SIN', city: 'Singapore', country: 'Singapore' },
+    { code: 'SFO', city: 'San Francisco', country: 'United States' }
+  ];
+  AIRLINES = [
+    { n: 'Air France', s: 'AF', c: '#0B2D6B' },
+    { n: 'Delta', s: 'DL', c: '#9B1B32' },
+    { n: 'United', s: 'UA', c: '#005DAA' },
+    { n: 'Lufthansa', s: 'LH', c: '#0A1D3D' },
+    { n: 'KLM', s: 'KL', c: '#0091C9' },
+    { n: 'British Airways', s: 'BA', c: '#075AAA' },
+    { n: 'SWISS', s: 'LX', c: '#B3261E' },
+    { n: 'Iberia', s: 'IB', c: '#C8102E' }
+  ];
+  FARES = [
+    { id: 'light', name: 'Light', mult: 1, feats: ['Carry-on bag only', 'No changes or refunds', 'Seat assigned at check-in'] },
+    { id: 'standard', name: 'Standard', mult: 1.18, feats: ['1 checked bag included', 'Changes for a fee', 'Standard seat selection'] },
+    { id: 'flex', name: 'Flex', mult: 1.38, feats: ['2 checked bags included', 'Free changes anytime', 'Any seat + priority boarding'] }
+  ];
+  RUNT = [
+    { label: 'Parsing preferences', sub: 'Route, dates, travelers, cabin', a: 0, b: 0.7 },
+    { label: 'Querying 14 airlines', sub: 'Live availability across alliances', a: 0.7, b: 2.9 },
+    { label: 'Ranking 128 fares by fit', sub: 'Price, duration, schedule quality', a: 2.6, b: 4.2 },
+    { label: 'Checking schedule conflicts', sub: 'Calendar agent cross-check', a: 3.4, b: 4.8 },
+    { label: 'Verifying prices & seats', sub: 'QA agent final pass', a: 4.6, b: 5.5 }
+  ];
+  RUNAG = [
+    { short: 'FL', color: '#4F46E5' },
+    { short: 'PW', color: '#7C3AED' },
+    { short: 'SC', color: '#0891B2' },
+    { short: 'BO', color: '#22C55E' },
+    { short: 'QA', color: '#334155' }
+  ];
+  PROCT = [
+    { label: 'Locking fare with airline', a: 0, b: 1.1 },
+    { label: 'Running QA verification', a: 1.1, b: 2.2 },
+    { label: 'Issuing e-tickets', a: 2.2, b: 3.1 }
+  ];
+
+  componentDidMount() {
+    try {
+      const b = JSON.parse(localStorage.getItem('atlas_bookings_v1') || '[]');
+      if (Array.isArray(b) && b.length) this.setState({ bookings: b });
+    } catch (e) {}
+    this._iv = setInterval(() => this.tick(), 250);
+  }
+  componentWillUnmount() { clearInterval(this._iv); }
+
+  tick() {
+    const st = this.state, now = Date.now(), upd = { now };
+    if (st.screen === 'run' && st.runStart && now - st.runStart > 5800) {
+      upd.screen = 'results'; upd.runStart = 0;
+      upd.toastMsg = '128 fares ranked · showing top matches'; upd.toastUntil = now + 2600;
+      upd.notifs = [{ time: this.nowT(), text: 'Flight team ranked fares for ' + st.to, icon: '✦', k: 'info' }, ...st.notifs];
+    }
+    if (st.pendingReply && st.typingUntil && now >= st.typingUntil) {
+      upd.messages = [...st.messages, st.pendingReply];
+      upd.pendingReply = null; upd.typingUntil = 0;
+      this.scrollChat();
+    }
+    if (st.screen === 'review' && st.reviewStart && !st.dropApplied && now - st.reviewStart > 2200) {
+      upd.dropApplied = true;
+      upd.toastMsg = 'Price watch: fare dropped −€12'; upd.toastUntil = now + 2600;
+    }
+    if (st.procStart && now - st.procStart > 3300) { this.finalizeBooking(); return; }
+    this.setState(upd);
+  }
+
+  nowT() { const d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  iso(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  fmtD(isoStr) {
+    if (!isoStr) return '';
+    const d = new Date(isoStr + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+  cityOf(code) { return this.CITIES.find((c) => c.code === code) || this.CITIES[0]; }
+  tint(hex, a) { const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+  toastNow(msg) { this.setState({ toastMsg: msg, toastUntil: Date.now() + 2600 }); }
+  genPNR() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 6; i++) s += A[Math.floor(Math.random() * A.length)]; return s; }
+  scrollChat() { setTimeout(() => { if (this._chat) this._chat.scrollTop = this._chat.scrollHeight + 400; }, 60); }
+
+  genFlights(from, to, date, timePref, sort) {
+    const seedStr = from + to + date;
+    let x = 7; for (const ch of seedStr) x = (x * 31 + ch.charCodeAt(0)) >>> 0;
+    const rnd = () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; };
+    const base = 340 + (x % 200);
+    const deps = [390, 470, 565, 660, 760, 900, 1120];
+    let fl = deps.map((d0, i) => {
+      const dep = d0 + Math.floor(rnd() * 45);
+      const stops = rnd() < 0.4 ? 1 : 0;
+      const dur = Math.round(base + rnd() * 80 + stops * 95);
+      const price = Math.round(205 + rnd() * 260 + (stops ? -55 : 35));
+      const al = this.AIRLINES[Math.floor(rnd() * this.AIRLINES.length)];
+      return { i, dep, arr: dep + dur + 60, dur, stops, price, al };
+    });
+    if (timePref === 'Morning') fl = fl.filter((f) => f.dep < 720);
+    if (timePref === 'Afternoon') fl = fl.filter((f) => f.dep >= 720 && f.dep < 1080);
+    if (timePref === 'Evening') fl = fl.filter((f) => f.dep >= 1080);
+    fl.forEach((f) => { f.score = f.price + f.dur * 0.55 + f.stops * 85; });
+    let bestScore = Infinity, bestI = -1;
+    fl.forEach((f) => { if (f.score < bestScore) { bestScore = f.score; bestI = f.i; } });
+    if (sort === 'price') fl.sort((a, b) => a.price - b.price);
+    else if (sort === 'dur') fl.sort((a, b) => a.dur - b.dur);
+    else fl.sort((a, b) => a.score - b.score);
+    return fl.map((f) => ({ ...f, pick: f.i === bestI, conf: 92 + (f.i % 5) }));
+  }
+  fmtT(min) { const m = ((min % 1440) + 1440) % 1440; return Math.floor(m / 60) + ':' + ('0' + (m % 60)).slice(-2); }
+  fmtDur(d) { return Math.floor(d / 60) + 'h' + ('0' + (d % 60)).slice(-2); }
+
+  flightRec(f, from, to, date) {
+    return {
+      dep: this.fmtT(f.dep), arr: this.fmtT(f.arr), plus1: f.arr >= 1440 ? '+1' : '',
+      durL: this.fmtDur(f.dur), stopsL: f.stops ? '1 stop' : 'Nonstop',
+      price: f.price, alName: f.al.n, alShort: f.al.s, alColor: f.al.c,
+      conf: f.conf, from, to, date
+    };
+  }
+
+  parseQuery(text) {
+    const s = ' ' + text.toLowerCase() + ' ';
+    let to = null, from = null;
+    for (const c of this.CITIES) {
+      const nm = c.city.toLowerCase();
+      const idx = s.indexOf(nm);
+      if (idx < 0) continue;
+      const before = s.slice(Math.max(0, idx - 6), idx);
+      if (before.includes('from ')) from = c.code; else if (!to) to = c.code;
+    }
+    let adults = null;
+    const mPax = s.match(/(\d+)\s*(people|person|pax|traveler|traveller|adult)/);
+    if (mPax) adults = Math.min(6, +mPax[1]);
+    if (!adults && (s.includes('for two') || s.includes('two people') || s.includes('couple') || s.includes(' 2 people'))) adults = 2;
+    const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+    let mi = -1; months.forEach((m, i) => { if (s.includes(m) || s.includes(' ' + m.slice(0, 3) + ' ')) mi = i; });
+    let dur = null;
+    const mDur = s.match(/(\d+)[\s-]*day/);
+    if (mDur) dur = +mDur[1];
+    else if (s.includes('weekend')) dur = 3;
+    else if (s.includes('week')) dur = 7;
+    let budget = null;
+    const mB = s.match(/€\s*([\d,]+)/) || s.match(/(\d{3,5})\s*(euro|eur)/);
+    if (mB) budget = mB[1];
+    let depart = null, ret = null;
+    const mRange = s.match(/(\d{1,2})\s*[–-]\s*(\d{1,2})/);
+    if (mi >= 0) {
+      const d1 = mRange ? +mRange[1] : 14;
+      const d2 = mRange ? +mRange[2] : d1 + (dur || 7);
+      depart = this.iso(new Date(2026, mi, d1));
+      ret = this.iso(new Date(2026, mi, d2));
+    } else if (dur) {
+      depart = this.state.depart;
+      const d = new Date(depart + 'T12:00:00'); d.setDate(d.getDate() + dur);
+      ret = this.iso(d);
+    }
+    return { to, from, adults, depart, ret, budget };
+  }
+
+  buildReply(p) {
+    if (!p.to) return { role: 'a', text: 'I can plan and book that — where would you like to fly? Try something like: Paris in September for two, under €2,500.' };
+    const from = p.from || this.state.from;
+    const dep = p.depart || this.state.depart;
+    const ret = p.ret || this.state.ret;
+    const ad = p.adults || this.state.adults;
+    const slots = [
+      from + ' → ' + p.to,
+      this.fmtD(dep) + ' – ' + this.fmtD(ret),
+      ad + ' traveler' + (ad > 1 ? 's' : '')
+    ];
+    if (p.budget) slots.push('Budget €' + p.budget);
+    return { role: 'a', text: 'Here is what I understood. Ready to put the flight team on it?', slots, parsed: { from, to: p.to, depart: dep, ret, adults: ad } };
+  }
+
+  sendChatText(text) {
+    const t = (text || '').trim();
+    if (!t) return;
+    const p = this.parseQuery(t);
+    const reply = this.buildReply(p);
+    this.setState({
+      screen: 'chat',
+      messages: [...this.state.messages, { role: 'u', text: t }],
+      chatInput: '', pendingReply: reply, typingUntil: Date.now() + 1100
+    });
+    this.scrollChat();
+  }
+
+  startRun() {
+    this.setState({ screen: 'run', runStart: Date.now(), leg: 1, selOut: null, selRet: null, fare: null, sort: 'ai', dropApplied: false, reviewStart: 0, sheet: null });
+  }
+
+  ensureTravelers() {
+    const n = this.state.adults + this.state.children;
+    const t = [...this.state.travelers];
+    while (t.length < n) t.push(t.length === 0 ? { first: 'Alex', last: 'Rivera' } : { first: '', last: '' });
+    t.length = n;
+    this.setState({ travelers: t });
+  }
+
+  totalCalc() {
+    const st = this.state;
+    if (!st.selOut || !st.fare) return 0;
+    const pp = st.selOut.price + (st.selRet ? st.selRet.price : 0);
+    const seats = st.adults + st.children * 0.75;
+    const sub = pp * st.fare.mult * seats;
+    return Math.round(sub * 1.12) - (st.dropApplied ? 12 : 0);
+  }
+
+  selectFlight(rec) {
+    const st = this.state;
+    if (st.leg === 1) {
+      if (st.oneWay) this.setState({ selOut: rec, screen: 'fare' });
+      else {
+        this.setState({ selOut: rec, leg: 2, toastMsg: 'Outbound locked — choose your return', toastUntil: Date.now() + 2400 });
+      }
+    } else {
+      this.setState({ selRet: rec, screen: 'fare' });
+    }
+  }
+
+  finalizeBooking() {
+    const st = this.state;
+    const pnr = this.genPNR();
+    const total = this.totalCalc();
+    const b = {
+      pnr,
+      route: st.from + ' → ' + st.to,
+      dates: this.fmtD(st.depart) + (st.oneWay ? '' : ' – ' + this.fmtD(st.ret)),
+      pax: (st.adults + st.children) + ' traveler' + (st.adults + st.children > 1 ? 's' : ''),
+      total, ts: Date.now()
+    };
+    const bookings = [b, ...st.bookings];
+    try { localStorage.setItem('atlas_bookings_v1', JSON.stringify(bookings)); } catch (e) {}
+    this.setState({
+      screen: 'confirm', procStart: 0, pnr, lastTotal: total, bookings,
+      notifs: [{ time: this.nowT(), text: 'Booking ' + pnr + ' confirmed · e-tickets issued', icon: '✓', k: 'ok' }, ...st.notifs]
+    });
+  }
+
+  buildCalendar() {
+    const st = this.state;
+    const today = '2026-07-04';
+    const first = new Date(st.calY, st.calM, 1);
+    const startW = (first.getDay() + 6) % 7;
+    const cells = [];
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(st.calY, st.calM, 1 + (i - startW));
+      const inM = d.getMonth() === st.calM;
+      const isoD = this.iso(d);
+      if (!inM) { cells.push({ t: '', bg: 'transparent', color: 'transparent', rad: '10px', fw: 400, onTap: () => {} }); continue; }
+      const disabled = isoD < today;
+      const isDep = isoD === st.depart;
+      const isRet = !st.oneWay && isoD === st.ret;
+      const inRange = !st.oneWay && st.ret && isoD > st.depart && isoD < st.ret;
+      cells.push({
+        t: d.getDate(),
+        bg: (isDep || isRet) ? '#4F46E5' : inRange ? 'rgba(79,70,229,0.09)' : 'transparent',
+        color: (isDep || isRet) ? '#FFFFFF' : disabled ? '#D3DAE3' : '#0F172A',
+        rad: (isDep || isRet) ? '19px' : '10px',
+        fw: (isDep || isRet) ? 700 : 400,
+        onTap: disabled ? () => {} : () => {
+          const s = this.state;
+          if (s.oneWay) { this.setState({ depart: isoD }); return; }
+          if (!s.depart || (s.depart && s.ret) || isoD <= s.depart) this.setState({ depart: isoD, ret: null });
+          else this.setState({ ret: isoD });
+        }
+      });
+    }
+    while (cells.length > 35 && cells.slice(35).every((c) => c.t === '')) cells.length = 35;
+    return cells;
+  }
+
+  renderVals() {
+    const st = this.state, now = st.now;
+    const fromC = this.cityOf(st.from), toC = this.cityOf(st.to);
+    const screen = st.screen;
+    const sheetVals = (name) => ({
+      ty: st.sheet === name ? '0%' : '110%',
+      bd: st.sheet === name ? 0.4 : 0,
+      pe: st.sheet === name ? 'auto' : 'none'
+    });
+    const citySheet = sheetVals(st.sheet === 'from' || st.sheet === 'to' ? st.sheet : '_');
+    const cal = sheetVals('cal'), paxSh = sheetVals('pax'), why = sheetVals('why');
+
+    // chat messages display
+    const messages = st.messages.map((m) => {
+      const isU = m.role === 'u';
+      return {
+        just: isU ? 'flex-end' : 'flex-start',
+        bg: isU ? '#4F46E5' : '#FFFFFF',
+        color: isU ? '#FFFFFF' : '#0F172A',
+        rad: isU ? '18px 18px 6px 18px' : '18px 18px 18px 6px',
+        shadow: isU ? 'none' : '0 1px 2px rgba(15,23,42,0.05)',
+        text: m.text,
+        slots: m.slots || [],
+        slotsDisplay: m.slots ? 'flex' : 'none',
+        launchDisplay: m.parsed ? 'flex' : 'none',
+        launch: m.parsed ? () => {
+          this.setState({ from: m.parsed.from, to: m.parsed.to, depart: m.parsed.depart, ret: m.parsed.ret, oneWay: !m.parsed.ret, adults: m.parsed.adults });
+          this.startRun();
+        } : () => {}
+      };
+    });
+
+    // run screen
+    const rt = st.runStart ? (now - st.runStart) / 1000 : 0;
+    const runTasks = this.RUNT.map((s, i) => {
+      const done = rt >= s.b, run = rt >= s.a && rt < s.b;
+      return {
+        label: s.label, sub: s.sub,
+        showDone: done ? 'flex' : 'none', showRun: run ? 'flex' : 'none', showQueue: (!done && !run) ? 'flex' : 'none',
+        rowOp: (!done && !run) ? 0.45 : 1,
+        railColor: done ? 'rgba(79,70,229,0.4)' : '#E5EAF1',
+        railDisplay: i === this.RUNT.length - 1 ? 'none' : 'block'
+      };
+    });
+    const runAgents = this.RUNAG.map((a, i) => {
+      const active = rt > i * 1.1;
+      return { short: a.short, bg: active ? this.tint(a.color, 0.13) : '#EEF0F5', color: active ? a.color : '#B6C0CE', anim: active && rt < 5.6 ? 'breathe 2s ease-in-out infinite' : 'none' };
+    });
+
+    // results
+    const legFrom = st.leg === 1 ? st.from : st.to;
+    const legTo = st.leg === 1 ? st.to : st.from;
+    const legDate = st.leg === 1 ? st.depart : (st.ret || st.depart);
+    const rawFlights = screen === 'results' ? this.genFlights(legFrom, legTo, legDate, st.timePref, st.sort) : [];
+    const flights = rawFlights.map((f) => {
+      const rec = this.flightRec(f, legFrom, legTo, legDate);
+      return {
+        ...rec,
+        alBg: this.tint(f.al.c, 0.1), alColor: f.al.c,
+        pickDisplay: f.pick ? 'flex' : 'none',
+        border: f.pick ? '1.5px solid rgba(79,70,229,0.35)' : '1.5px solid transparent',
+        shadow: f.pick ? '0 2px 4px rgba(79,70,229,0.06),0 12px 28px rgba(79,70,229,0.12)' : '0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05)',
+        onTap: () => this.selectFlight(rec),
+        whyTap: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ sheet: 'why', whyFlight: rec }); }
+      };
+    });
+    const sortDefs = [{ id: 'ai', label: '✦ AI ranked' }, { id: 'price', label: 'Cheapest' }, { id: 'dur', label: 'Fastest' }];
+    const sortChips = sortDefs.map((s) => ({
+      label: s.label,
+      bg: st.sort === s.id ? '#0F172A' : '#FFFFFF',
+      color: st.sort === s.id ? '#FFFFFF' : '#64748B',
+      onTap: () => this.setState({ sort: s.id })
+    }));
+
+    // fares
+    const pp = st.selOut ? st.selOut.price + (st.selRet ? st.selRet.price : 0) : 0;
+    const fares = this.FARES.map((fa) => ({
+      name: fa.name,
+      priceLabel: '€' + Math.round(pp * fa.mult) + ' pp',
+      feats: fa.feats,
+      border: '1.5px solid transparent',
+      btnBg: fa.id === 'standard' ? '#4F46E5' : '#EEF0FE',
+      btnColor: fa.id === 'standard' ? '#FFFFFF' : '#4F46E5',
+      btnLabel: fa.id === 'standard' ? 'Select · Most popular' : 'Select',
+      onTap: () => { this.setState({ fare: fa }); this.ensureTravelers(); this.setState({ screen: 'pax' }); }
+    }));
+
+    // pax forms
+    const travForms = st.travelers.map((tv, i) => ({
+      label: 'Traveler ' + (i + 1) + (i < st.adults ? ' · Adult' : ' · Child'),
+      first: tv.first, last: tv.last,
+      onFirst: (e) => { const t = [...this.state.travelers]; t[i] = { ...t[i], first: e.target.value }; this.setState({ travelers: t }); },
+      onLast: (e) => { const t = [...this.state.travelers]; t[i] = { ...t[i], last: e.target.value }; this.setState({ travelers: t }); }
+    }));
+    const paxValid = st.travelers.length > 0 && st.travelers.every((tv) => tv.first.trim() && tv.last.trim()) && st.email.includes('@');
+
+    // review
+    const seats = st.adults + st.children * 0.75;
+    const sub = pp * (st.fare ? st.fare.mult : 1) * seats;
+    const tax = sub * 0.12;
+    const total = this.totalCalc();
+    const priceLines = st.fare ? [
+      { label: st.fare.name + ' fare × ' + (st.adults + st.children) + ' travelers', value: '€' + Math.round(sub), color: '#334155', fw: 500 },
+      { label: 'Taxes & fees', value: '€' + Math.round(tax), color: '#64748B', fw: 400 }
+    ] : [];
+    if (st.dropApplied) priceLines.push({ label: 'Price watch adjustment', value: '−€12', color: '#16A34A', fw: 600 });
+
+    const selText = (rec, label) => rec ? label + ' · ' + rec.from + ' → ' + rec.to + ' · ' + this.fmtD(rec.date) + ' · ' + rec.dep + '–' + rec.arr + ' · €' + rec.price : '';
+
+    // proc overlay
+    const pt = st.procStart ? (now - st.procStart) / 1000 : 0;
+    const procSteps = this.PROCT.map((s) => {
+      const done = pt >= s.b, run = pt >= s.a && pt < s.b;
+      return { label: s.label, op: (!done && !run) ? 0.4 : 1, showDone: done ? 'flex' : 'none', showRun: run ? 'flex' : 'none', showQueue: (!done && !run) ? 'flex' : 'none' };
+    });
+
+    // sheets: city list
+    const q = st.cityQuery.toLowerCase();
+    const otherField = st.sheet === 'from' ? 'to' : 'from';
+    const cityList = this.CITIES.filter((c) => !q || c.city.toLowerCase().includes(q) || c.code.toLowerCase().includes(q)).map((c) => ({
+      ...c,
+      onTap: () => {
+        const upd = { sheet: null, cityQuery: '' };
+        if (c.code === this.state[otherField]) upd[otherField] = this.state[st.sheet];
+        upd[st.sheet] = c.code;
+        this.setState(upd);
+      }
+    }));
+
+    const timePrefs = ['Any', 'Morning', 'Afternoon', 'Evening'];
+    const timeChips = timePrefs.map((tp) => ({
+      label: tp,
+      bg: st.timePref === tp ? '#0F172A' : '#F5F6FA',
+      color: st.timePref === tp ? '#FFFFFF' : '#64748B',
+      onTap: () => this.setState({ timePref: tp })
+    }));
+    const cabinChips = ['Economy', 'Premium', 'Business'].map((cb) => ({
+      label: cb,
+      bg: st.cabin === cb ? '#0F172A' : '#F5F6FA',
+      color: st.cabin === cb ? '#FFFFFF' : '#64748B',
+      onTap: () => this.setState({ cabin: cb })
+    }));
+
+    const suggestedTexts = [
+      'Paris Sep 14–21 for 2 people under €2,500',
+      'Weekend in Lisbon for two in October',
+      'Tokyo for 10 days in September, 1 person'
+    ];
+    const suggested = suggestedTexts.map((t) => ({
+      text: t,
+      onTap: () => { this.setState({ screen: 'chat' }); setTimeout(() => this.sendChatText(t), 350); },
+      onSend: () => this.sendChatText(t)
+    }));
+
+    const tabDefs = [{ id: 'home', label: 'Home' }, { id: 'trips', label: 'Trips' }, { id: 'activity', label: 'Activity' }];
+    const tabs = tabDefs.map((tb) => ({
+      label: tb.label,
+      bg: screen === tb.id ? '#0F172A' : 'transparent',
+      color: screen === tb.id ? '#FFFFFF' : '#64748B',
+      onTap: () => this.setState({ screen: tb.id })
+    }));
+
+    const notifCards = st.notifs.map((n) => ({
+      ...n,
+      iconBg: n.k === 'ok' ? 'rgba(34,197,94,0.12)' : 'rgba(79,70,229,0.1)',
+      iconColor: n.k === 'ok' ? '#16A34A' : '#4F46E5'
+    }));
+
+    const wf = st.whyFlight;
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    return {
+      sHome: screen === 'home', sChat: screen === 'chat', sRun: screen === 'run',
+      sResults: screen === 'results', sFare: screen === 'fare', sPax: screen === 'pax',
+      sReview: screen === 'review', sConfirm: screen === 'confirm', sTrips: screen === 'trips', sActivity: screen === 'activity',
+
+      fromCode: st.from, fromCity: fromC.city, toCode: st.to, toCity: toC.city,
+      dateLabel: st.oneWay ? this.fmtD(st.depart) + ' · One way' : this.fmtD(st.depart) + ' → ' + (st.ret ? this.fmtD(st.ret) : 'pick return'),
+      paxLabel: (st.adults + st.children) + ' traveler' + (st.adults + st.children > 1 ? 's' : '') + ' · ' + st.cabin,
+      paxShort: (st.adults + st.children) + ' pax',
+      timeChips, suggested,
+
+      navHome: () => this.setState({ screen: 'home' }),
+      navChat: () => { this.setState({ screen: 'chat' }); this.scrollChat(); },
+      goTrips: () => this.setState({ screen: 'trips' }),
+      openFrom: () => this.setState({ sheet: 'from', cityQuery: '' }),
+      openTo: () => this.setState({ sheet: 'to', cityQuery: '' }),
+      openCal: () => this.setState({ sheet: 'cal' }),
+      openPax: () => this.setState({ sheet: 'pax' }),
+      swap: () => this.setState({ from: st.to, to: st.from }),
+      searchGo: () => {
+        if (st.from === st.to) { this.toastNow('Pick two different airports'); return; }
+        if (!st.oneWay && !st.ret) { this.setState({ sheet: 'cal' }); this.toastNow('Pick a return date'); return; }
+        this.startRun();
+      },
+      closeSheet: () => this.setState({ sheet: null }),
+
+      messages, chatInput: st.chatInput,
+      chatEmptyDisplay: (st.messages.length === 0 && !st.pendingReply) ? 'flex' : 'none',
+      typingDisplay: st.pendingReply ? 'flex' : 'none',
+      onChatInput: (e) => this.setState({ chatInput: e.target.value }),
+      onChatKey: (e) => { if (e.key === 'Enter') this.sendChatText(this.state.chatInput); },
+      sendChat: () => this.sendChatText(st.chatInput),
+      sendBg: st.chatInput.trim() ? '#4F46E5' : '#C7CBD6',
+      chatRef: (el) => { this._chat = el; },
+
+      runRoute: fromC.city + ' → ' + toC.city,
+      runSub: this.fmtD(st.depart) + (st.oneWay ? '' : ' – ' + this.fmtD(st.ret)) + ' · ' + (st.adults + st.children) + ' travelers · ' + st.cabin,
+      runTasks, runAgents,
+      runBarW: Math.min(100, Math.round(rt / 5.6 * 100)) + '%',
+
+      legLabel: st.leg === 1 ? 'Outbound' : 'Return',
+      resFrom: legFrom, resTo: legTo, resDate: this.fmtD(legDate),
+      resCount: flights.length,
+      flights, sortChips,
+      resEmptyDisplay: flights.length === 0 ? 'flex' : 'none',
+      outChipDisplay: (st.leg === 2 && st.selOut) ? 'flex' : 'none',
+      outChipText: st.selOut ? st.selOut.dep + '–' + st.selOut.arr + ' · ' + st.selOut.alName + ' · €' + st.selOut.price : '',
+      resBack: () => {
+        if (st.leg === 2) this.setState({ leg: 1, selOut: null });
+        else this.setState({ screen: 'home' });
+      },
+
+      selOutText: selText(st.selOut, 'Outbound'),
+      selRetText: selText(st.selRet, 'Return'),
+      selRetDisplay: st.selRet ? 'block' : 'none',
+      fares,
+      fareBack: () => this.setState({ screen: 'results' }),
+
+      travForms, email: st.email,
+      onEmail: (e) => this.setState({ email: e.target.value }),
+      paxBack: () => this.setState({ screen: 'fare' }),
+      paxBtnBg: paxValid ? '#4F46E5' : '#C7CBD6',
+      paxBtnColor: '#FFFFFF',
+      paxContinue: () => {
+        if (!paxValid) { this.toastNow('Fill in all traveler names'); return; }
+        this.setState({ screen: 'review', reviewStart: Date.now(), dropApplied: false });
+      },
+
+      reviewPaxLine: st.travelers.map((tv) => (tv.first + ' ' + tv.last).trim()).filter(Boolean).join(' · ') + ' · ' + st.cabin,
+      priceLines,
+      dropDisplay: st.dropApplied ? 'flex' : 'none',
+      totalLabel: total.toLocaleString('en-US'),
+      reviewBack: () => this.setState({ screen: 'pax' }),
+      confirmPay: () => this.setState({ procStart: Date.now() }),
+      procDisplay: st.procStart ? 'flex' : 'none',
+      procSteps,
+
+      pnr: st.pnr,
+      confFrom: st.from, confTo: st.to,
+      confDates: this.fmtD(st.depart) + (st.oneWay ? ' · One way' : ' – ' + this.fmtD(st.ret)),
+      confPax: (st.adults + st.children) + ' traveler' + (st.adults + st.children > 1 ? 's' : ''),
+      newSearch: () => this.setState({ screen: 'home', selOut: null, selRet: null, fare: null, leg: 1 }),
+
+      bookingCards: st.bookings.map((b) => ({ ...b, total: b.total.toLocaleString('en-US') })),
+      tripsEmptyDisplay: st.bookings.length === 0 ? 'flex' : 'none',
+      notifCards,
+
+      tabDisplay: (screen === 'home' || screen === 'trips' || screen === 'activity') ? 'flex' : 'none',
+      tabs,
+
+      toastText: st.toastMsg,
+      toastOp: now < st.toastUntil ? 1 : 0,
+      toastTy: now < st.toastUntil ? '0px' : '12px',
+
+      cityTitle: st.sheet === 'from' ? 'Flying from' : 'Flying to',
+      cityQuery: st.cityQuery,
+      onCityQuery: (e) => this.setState({ cityQuery: e.target.value }),
+      cityList,
+      cityTy: citySheet.ty, cityBd: citySheet.bd, cityPe: citySheet.pe,
+
+      calTy: cal.ty, calBd: cal.bd, calPe: cal.pe,
+      monthLabel: monthNames[st.calM] + ' ' + st.calY,
+      prevM: () => { const m = st.calM - 1; if (st.calY === 2026 && m < 6) return; this.setState(m < 0 ? { calM: 11, calY: st.calY - 1 } : { calM: m }); },
+      nextM: () => { const m = st.calM + 1; if (st.calY === 2026 && m > 11) return; this.setState(m > 11 ? { calM: 0, calY: st.calY + 1 } : { calM: m }); },
+      calCells: this.buildCalendar(),
+      calHint: st.oneWay ? 'One-way · pick your departure day' : (!st.ret ? 'Now pick your return day' : this.fmtD(st.depart) + ' → ' + this.fmtD(st.ret)),
+      setRT: () => this.setState({ oneWay: false }),
+      setOW: () => this.setState({ oneWay: true, ret: null }),
+      rtBg: !st.oneWay ? '#0F172A' : '#F5F6FA', rtColor: !st.oneWay ? '#FFFFFF' : '#64748B',
+      owBg: st.oneWay ? '#0F172A' : '#F5F6FA', owColor: st.oneWay ? '#FFFFFF' : '#64748B',
+
+      paxTy: paxSh.ty, paxBd: paxSh.bd, paxPe: paxSh.pe,
+      adults: st.adults, children: st.children,
+      adultsMinus: () => { if (st.adults > 1) this.setState({ adults: st.adults - 1 }); },
+      adultsPlus: () => { if (st.adults < 6) this.setState({ adults: st.adults + 1 }); },
+      childMinus: () => { if (st.children > 0) this.setState({ children: st.children - 1 }); },
+      childPlus: () => { if (st.children < 4) this.setState({ children: st.children + 1 }); },
+      cabinChips,
+
+      whyTy: why.ty, whyBd: why.bd, whyPe: why.pe,
+      whyConf: wf ? wf.conf : 94,
+      whyConfW: (wf ? wf.conf : 94) + '%',
+      whyTs: this.nowT(),
+      whyReasons: wf ? [
+        'Cheapest ' + (wf.stopsL === 'Nonstop' ? 'nonstop' : 'option') + ' inside your time window',
+        'Arrives ' + wf.arr + ' — fits hotel check-in and first-evening plans',
+        wf.alName + ' runs 94% on-time on this route (90-day window)',
+        'Fare is 12% below the 30-day median for these dates'
+      ] : [],
+      whyRejected: [
+        '2-stop red-eye — saves €38 but adds 6h 40m travel time',
+        'Earlier nonstop — €61 more for a 45-minute gain'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

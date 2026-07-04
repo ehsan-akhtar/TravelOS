@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F0EEE9;font-family:system-ui,sans-serif}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:0.35}}
+@keyframes flowDash{to{stroke-dashoffset:-20}}
+@keyframes haloPulse{0%{r:26;stroke-opacity:0.6}100%{r:38;stroke-opacity:0}}
+@keyframes packetMove{from{offset-distance:0%}to{offset-distance:100%}}
+@keyframes tickerIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}
+.dv-note{margin:0 0 22px;font:400 12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.55);max-width:760px}
+.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}
+</style>
+</helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Agent Orchestration — hero screen, three lenses on the same live run</span></div>
+<p class="dv-note">All three phones run the same simulated request ("Paris, 7 days, two people, €2,500 in September") — a ~34s loop compressed from a 5-minute story (11:03 → 11:07). Statuses, progress rings, confidence, toasts, handoffs and graph packets all update live. Type: Instrument Sans + DM Sans · palette per your spec. Pick a lens (or a mix) and I'll build the full 15–20 screen prototype around it.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Mission Timeline — staged run, calm &amp; scannable</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div data-screen-label="1a Mission Timeline" style="position:relative;height:100%;display:flex;flex-direction:column;background:#FAFAFA;font-family:'DM Sans',system-ui,sans-serif;padding-top:64px;box-sizing:border-box;overflow:hidden">
+  <div style="padding:6px 22px 0;flex:none">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#94A3B8">Live run · {{ elapsedClock }}</div>
+      <div onClick="{{ restart }}" style="width:30px;height:30px;border-radius:15px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748B;font-size:15px">↻</div>
+    </div>
+    <div style="margin-top:8px;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:23px;line-height:1.2;color:#0F172A;letter-spacing:-0.01em">Paris, 7 days for two</div>
+    <div style="margin-top:3px;font-size:13px;color:#64748B">September · budget €2,500</div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
+      <div style="flex:1;height:4px;border-radius:2px;background:#E9EDF3;overflow:hidden"><div style="height:100%;border-radius:2px;background:linear-gradient(90deg,#4F46E5,#7C3AED);width:{{ overallBarW }};transition:width 0.3s linear"></div></div>
+      <div style="font-size:12px;font-weight:600;color:#4F46E5;min-width:34px;text-align:right;font-variant-numeric:tabular-nums">{{ overallPct }}%</div>
+    </div>
+    <div style="margin-top:5px;font-size:12px;color:#94A3B8">{{ phase }}</div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:16px 22px 8px">
+    <sc-for list="{{ agents }}" as="s" hint-placeholder-count="6">
+      <div style="display:flex;gap:14px;opacity:{{ s.rowOp }};transition:opacity 0.5s">
+        <div style="display:flex;flex-direction:column;align-items:center;width:26px;flex:none">
+          <span style="display:{{ s.showDone }};width:26px;height:26px;border-radius:13px;background:{{ s.color }};color:#FFFFFF;font-size:12px;align-items:center;justify-content:center;flex:none">✓</span>
+          <span style="display:{{ s.showRun }};width:26px;height:26px;border-radius:13px;border:2.5px solid {{ s.color }};border-top-color:transparent;box-sizing:border-box;animation:spin 0.9s linear infinite;flex:none"></span>
+          <span style="display:{{ s.showQueue }};width:26px;height:26px;border-radius:13px;border:2px solid #D6DEE8;box-sizing:border-box;flex:none"></span>
+          <div style="flex:1;width:2px;min-height:12px;margin:3px 0;border-radius:1px;background:{{ s.railColor }};display:{{ s.railDisplay }};transition:background 0.5s"></div>
+        </div>
+        <div style="flex:1;min-width:0;padding-bottom:11px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14.5px;color:#0F172A">{{ s.name }}</div>
+            <div style="font-size:11px;color:#94A3B8;font-variant-numeric:tabular-nums;flex:none">{{ s.rightLabel }}</div>
+          </div>
+          <div style="margin-top:2px;font-size:12.5px;line-height:1.35;color:#64748B">{{ s.note }}</div>
+          <div style="display:{{ s.barDisplay }};margin-top:7px;height:3px;border-radius:1.5px;background:#E9EDF3;overflow:hidden"><div style="height:100%;background:{{ s.color }};width:{{ s.barW }};transition:width 0.3s linear;border-radius:1.5px"></div></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:12px 22px 28px;flex:none;background:linear-gradient(180deg,rgba(250,250,250,0),#FAFAFA 45%)">
+    <div style="height:52px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:{{ viewPlanBg }};color:{{ viewPlanColor }};transition:background 0.5s,color 0.5s">{{ viewPlanLabel }}</div>
+  </div>
+  <div style="position:absolute;left:20px;right:20px;bottom:100px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.94);backdrop-filter:blur(14px);border:1px solid rgba(15,23,42,0.06);border-radius:16px;padding:11px 14px;box-shadow:0 10px 30px rgba(15,23,42,0.12);opacity:{{ toast.op }};transform:translateY({{ toast.ty }});transition:opacity 0.45s,transform 0.45s;pointer-events:none">
+    <span style="width:24px;height:24px;border-radius:12px;background:rgba(34,197,94,0.14);color:#16A34A;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none">{{ toast.icon }}</span>
+    <span style="font-size:12.5px;font-weight:500;color:#0F172A">{{ toast.text }}</span>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Agent Workspace — live cards, rings, confidence &amp; handoffs</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div data-screen-label="1b Agent Workspace" style="position:relative;height:100%;display:flex;flex-direction:column;background:#F6F7F9;font-family:'DM Sans',system-ui,sans-serif;padding-top:64px;box-sizing:border-box;overflow:hidden">
+  <div style="padding:6px 20px 12px;flex:none">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:23px;color:#0F172A;letter-spacing:-0.01em">Agent Workspace</div>
+      <div onClick="{{ restart }}" style="width:30px;height:30px;border-radius:15px;background:#FFFFFF;box-shadow:0 1px 3px rgba(15,23,42,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748B;font-size:15px">↻</div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px;background:#FFFFFF;border-radius:14px;padding:6px 11px;box-shadow:0 1px 2px rgba(15,23,42,0.05);font-size:12px;font-weight:500;color:#334155"><span style="width:7px;height:7px;border-radius:4px;background:#4F46E5;animation:pulseDot 1.4s ease-in-out infinite"></span>{{ runCount }} working</div>
+      <div style="display:flex;align-items:center;gap:6px;background:#FFFFFF;border-radius:14px;padding:6px 11px;box-shadow:0 1px 2px rgba(15,23,42,0.05);font-size:12px;font-weight:500;color:#334155"><span style="width:7px;height:7px;border-radius:4px;background:#22C55E"></span>{{ doneCount }} done</div>
+      <div style="display:flex;align-items:center;gap:6px;background:#FFFFFF;border-radius:14px;padding:6px 11px;box-shadow:0 1px 2px rgba(15,23,42,0.05);font-size:12px;font-weight:500;color:#334155"><span style="width:7px;height:7px;border-radius:4px;background:#CBD5E1"></span>{{ queueCount }} queued</div>
+    </div>
+  </div>
+  <div style="flex:1;overflow:auto;padding:2px 20px 90px;display:flex;flex-direction:column;gap:12px">
+    <sc-for list="{{ workAgents }}" as="a" hint-placeholder-count="4">
+      <div style="background:#FFFFFF;border-radius:20px;padding:14px 15px;box-shadow:0 1px 2px rgba(15,23,42,0.04),0 8px 24px rgba(15,23,42,0.05);opacity:{{ a.rowOp }};transition:opacity 0.5s;flex:none">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;border-radius:21px;background:{{ a.avBg }};color:{{ a.color }};display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:13px;animation:{{ a.avatarAnim }};flex:none">{{ a.short }}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:14px;color:#0F172A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.name }}</div>
+              <div style="font-size:10px;font-weight:600;letter-spacing:0.02em;padding:3px 8px;border-radius:9px;background:{{ a.pillBg }};color:{{ a.pillColor }};flex:none;transition:background 0.4s,color 0.4s">{{ a.statusLabel }}</div>
+            </div>
+            <div style="margin-top:3px;font-size:12px;line-height:1.35;color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.note }}</div>
+          </div>
+          <div style="position:relative;width:40px;height:40px;flex:none">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="17" fill="none" stroke="#EAEEF3" stroke-width="3"></circle>
+              <circle cx="20" cy="20" r="17" fill="none" stroke="{{ a.color }}" stroke-width="3" stroke-linecap="round" stroke-dasharray="106.8" stroke-dashoffset="{{ a.ringOffset }}" transform="rotate(-90 20 20)" style="transition:stroke-dashoffset 0.3s linear"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#334155;font-variant-numeric:tabular-nums">{{ a.pct }}</div>
+          </div>
+        </div>
+        <div style="margin-top:11px;padding-top:10px;border-top:1px solid #F1F4F8;display:flex;align-items:center;gap:14px;font-size:11px;color:#94A3B8">
+          <span>Confidence <b style="color:#334155;font-weight:600">{{ a.conf }}</b></span>
+          <span>{{ a.eta }}</span>
+          <span style="margin-left:auto;font-variant-numeric:tabular-nums">{{ a.ts }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position:absolute;left:20px;right:20px;bottom:34px;display:flex;align-items:center;gap:10px;background:#0F172A;border-radius:16px;padding:12px 15px;box-shadow:0 12px 32px rgba(15,23,42,0.28);opacity:{{ handoff.op }};transform:translateY({{ handoff.ty }});transition:opacity 0.45s,transform 0.45s;pointer-events:none">
+    <span style="font-size:12px;color:#A5B4FC;font-weight:600;flex:none">{{ handoff.from }} → {{ handoff.to }}</span>
+    <span style="font-size:12px;color:rgba(255,255,255,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ handoff.note }}</span>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Execution Graph — live DAG with flowing packets (dark)</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div data-screen-label="1c Execution Graph" style="position:relative;height:100%;display:flex;flex-direction:column;background:#0B0F1C;font-family:'DM Sans',system-ui,sans-serif;padding-top:64px;box-sizing:border-box;overflow:hidden">
+  <div style="padding:6px 22px 2px;display:flex;align-items:baseline;justify-content:space-between;flex:none">
+    <div style="font-family:'Instrument Sans',sans-serif;font-weight:700;font-size:23px;color:#F8FAFC;letter-spacing:-0.01em">Execution Graph</div>
+    <div style="font-size:12px;color:#64748B;font-variant-numeric:tabular-nums">{{ elapsedClock }}</div>
+  </div>
+  <div style="padding:4px 22px 0;display:flex;gap:14px;font-size:11px;color:#7C8AA5;flex:none">
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:4px;background:#22C55E"></span>Done</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:4px;background:#4F46E5;animation:pulseDot 1.4s ease-in-out infinite"></span>Active</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:4px;background:rgba(148,163,184,0.35)"></span>Queued</span>
+  </div>
+  <div style="position:relative;width:340px;height:420px;margin:8px auto 0;flex:none">
+    <svg width="340" height="420" viewBox="0 0 340 420">
+      <sc-for list="{{ edges }}" as="e" hint-placeholder-count="4">
+        <g>
+          <path d="{{ e.d }}" fill="none" stroke="{{ e.stroke }}" stroke-width="1.5" stroke-dasharray="{{ e.dash }}" style="animation:{{ e.anim }};transition:stroke 0.5s"></path>
+          <circle r="2.5" fill="{{ e.pcolor }}" style="display:{{ e.pktDisplay }};offset-path:{{ e.pathStr }};animation:packetMove 1.5s linear infinite"></circle>
+        </g>
+      </sc-for>
+      <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="5">
+        <g>
+          <circle cx="{{ n.cx }}" cy="{{ n.cy }}" r="26" fill="none" stroke="{{ n.color }}" style="opacity:{{ n.haloOp }};animation:{{ n.haloAnim }}"></circle>
+          <circle cx="{{ n.cx }}" cy="{{ n.cy }}" r="24" fill="{{ n.fill }}" stroke="{{ n.ringBase }}" stroke-width="1.5" style="filter:{{ n.glow }};transition:fill 0.6s"></circle>
+          <circle cx="{{ n.cx }}" cy="{{ n.cy }}" r="24" fill="none" stroke="{{ n.color }}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="{{ n.ringOffset }}" transform="{{ n.rot }}" style="transition:stroke-dashoffset 0.3s linear"></circle>
+        </g>
+      </sc-for>
+    </svg>
+    <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="5">
+      <div style="position:absolute;inset:0;pointer-events:none">
+        <div style="position:absolute;left:{{ n.boxLeft }}px;top:{{ n.boxTop }}px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:11px;color:{{ n.txt }};transition:color 0.5s">{{ n.short }}</div>
+        <div style="position:absolute;left:{{ n.labLeft }}px;top:{{ n.labTop }}px;width:80px;text-align:center;font-family:'DM Sans',sans-serif;font-size:9.5px;letter-spacing:0.06em;color:{{ n.labelColor }};transition:color 0.5s">{{ n.label }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="flex:1"></div>
+  <div style="margin:0 16px 26px;background:#111827;border:1px solid rgba(148,163,184,0.1);border-radius:18px;padding:12px 14px;min-height:112px;flex:none;box-sizing:border-box">
+    <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#64748B;margin-bottom:8px">Activity</div>
+    <sc-for list="{{ tickerEvents }}" as="ev" hint-placeholder-count="3">
+      <div style="display:flex;gap:10px;padding:3.5px 0;animation:tickerIn 0.35s ease-out">
+        <span style="font-size:11px;flex:none;font-family:ui-monospace,Menlo,monospace;color:#818CF8;font-variant-numeric:tabular-nums">{{ ev.time }}</span>
+        <span style="font-size:12px;color:#CBD5E1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ev.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-import>
+</div>
+
+</div>
+<p class="dv-next">Try next: "build the full app around <a class="dv-oid" href="#1b">1b</a>" · "make <a class="dv-oid" href="#1c">1c</a> the hero but in light mode" · "mix: <a class="dv-oid" href="#1a">1a</a>'s header with <a class="dv-oid" href="#1b">1b</a>'s cards"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;speed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.5,&quot;max&quot;:3,&quot;step&quot;:0.25,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Simulation&quot;},&quot;showToasts&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Simulation&quot;}}">
+class Component extends DCLogic {
+  state = { now: Date.now(), t0: Date.now() };
+
+  AGENTS = [
+    { id: 'intent',  name: 'Understanding intent',      short: 'IP', color: '#4F46E5', start: 0,    dur: 1.8,  conf: 99, done: 'Paris · 7 days · 2 travelers · €2,500', notes: ['Parsing request…', 'Extracting constraints…'] },
+    { id: 'graph',   name: 'Building execution graph',  short: 'XG', color: '#64748B', start: 1.8,  dur: 1.2,  conf: 98, done: '8 agents · 10 dependencies', notes: ['Mapping dependencies…'] },
+    { id: 'flight',  name: 'Flight Intelligence',       short: 'FL', color: '#4F46E5', start: 3,    dur: 12.5, conf: 96, done: 'CDG nonstop · €318 per person', notes: ['Querying 14 airlines…', 'Comparing 212 fares…', 'Filtering layovers over 2h…', 'Negotiating CDG nonstop €318 pp'] },
+    { id: 'hotel',   name: 'Hotel Discovery',           short: 'HD', color: '#7C3AED', start: 3,    dur: 11,   conf: 93, done: 'Le Marais boutique · €131 per night', notes: ['Scanning Sep 4–11 availability…', 'Ranking 96 stays by walkability…', 'Cross-checking guest reviews…'] },
+    { id: 'weather', name: 'Weather Prediction',        short: 'WX', color: '#0891B2', start: 3,    dur: 3.5,  conf: 91, done: '18–23°C · low rain risk', notes: ['Pulling 10-year September data…', 'Modeling rain probability…'] },
+    { id: 'visa',    name: 'Visa & Documentation',      short: 'VD', color: '#64748B', start: 4.5,  dur: 5.5,  conf: 99, done: 'No visa required · passports valid', notes: ['Checking Schengen rules…', 'Verifying passport validity window…'] },
+    { id: 'local',   name: 'Local Experience',          short: 'LX', color: '#F59E0B', start: 7,    dur: 9,    conf: 90, done: '12 experiences · 3 reservations held', notes: ['Curating Marais food walk…', 'Matching taste profile…', 'Reserving Louvre entry window…'] },
+    { id: 'budget',  name: 'Budget Optimization',       short: 'BO', color: '#22C55E', start: 15.5, dur: 7,    conf: 95, done: '€2,438 total · €62 under budget', notes: ['Allocating €2,500 across categories…', 'Trading taxi budget for one dinner…', 'Applying flight price drop −€112…'] },
+    { id: 'qa',      name: 'QA Verification',           short: 'QA', color: '#334155', start: 23,   dur: 5,    conf: 97, done: 'Verified · 0 conflicts', notes: ['Cross-checking 41 facts…', 'Validating dates, prices, transfers…'] }
+  ];
+
+  POS = { intent: [170, 42], flight: [62, 138], hotel: [170, 128], weather: [278, 138], visa: [62, 244], local: [278, 244], budget: [170, 254], qa: [170, 356] };
+  EDGES = [['intent','flight'],['intent','hotel'],['intent','weather'],['flight','visa'],['weather','local'],['flight','budget'],['hotel','budget'],['visa','qa'],['budget','qa'],['local','qa']];
+  NODEL = { intent: 'Intent', flight: 'Flights', hotel: 'Hotels', weather: 'Weather', visa: 'Visa', local: 'Local', budget: 'Budget', qa: 'QA' };
+  DARKC = { visa: '#94A3B8', qa: '#C7D2FE', graph: '#94A3B8' };
+
+  EVENTS = [
+    { t: 0.2,  label: 'Intent parsed — Paris, 7d, 2 pax' },
+    { t: 1.9,  label: 'Execution graph built (8 agents)' },
+    { t: 3.0,  label: 'Flight search started' },
+    { t: 3.2,  label: 'Hotel scan started' },
+    { t: 6.6,  label: 'Weather: 18–23°C, low rain' },
+    { t: 10.2, label: 'Visa: not required (Schengen)' },
+    { t: 14.1, label: 'Hotels ranked — 3 shortlisted' },
+    { t: 15.6, label: 'Flights shortlisted — €318 pp' },
+    { t: 16.0, label: 'Budget optimization started' },
+    { t: 19.5, label: 'Price drop applied · −€112' },
+    { t: 22.6, label: 'Budget locked — €2,438' },
+    { t: 23.2, label: 'QA verification running' },
+    { t: 28.0, label: 'Itinerary verified & ready' }
+  ];
+
+  TOASTS = [
+    { from: 12,   to: 16,   icon: '✓', text: 'Better hotel found — €48 less per night' },
+    { from: 19.5, to: 23.5, icon: '↓', text: 'Price drop applied · itinerary saved €112' },
+    { from: 28,   to: 33,   icon: '✓', text: 'Itinerary ready — €2,438 of €2,500' }
+  ];
+
+  HANDOFFS = [
+    { from: 15.5, to: 19,   a: 'Flight', b: 'Budget', note: '212 fares handed off' },
+    { from: 22.6, to: 25.5, a: 'Budget', b: 'QA', note: 'Draft plan submitted for verification' }
+  ];
+
+  componentDidMount() {
+    this._iv = setInterval(() => this.setState({ now: Date.now() }), 250);
+  }
+  componentWillUnmount() { clearInterval(this._iv); }
+
+  clock(x) {
+    const tot = Math.floor(180 + x * 9);
+    const m = Math.floor(tot / 60), s = tot % 60;
+    return '11:0' + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  tint(hex, a) {
+    const n = parseInt(hex.slice(1), 16);
+    return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  renderVals() {
+    const speed = Number(this.props.speed ?? 1) || 1;
+    const showToasts = this.props.showToasts ?? true;
+    const LOOP = 34;
+    const t = ((this.state.now - this.state.t0) / 1000 * speed) % LOOP;
+    const ease = (p) => 1 - Math.pow(1 - p, 3);
+
+    const agents = this.AGENTS.map((a) => {
+      const raw = (t - a.start) / a.dur;
+      const p = Math.max(0, Math.min(1, raw));
+      const status = raw < 0 ? 'queued' : raw >= 1 ? 'done' : 'running';
+      const pe = ease(p);
+      const pct = Math.round(pe * 100);
+      const done = status === 'done', run = status === 'running';
+      const note = done ? a.done : status === 'queued' ? 'Waiting on dependencies' : a.notes[Math.min(a.notes.length - 1, Math.floor(p * a.notes.length))];
+      const ts = this.clock(Math.min(Math.max(t, a.start), a.start + a.dur));
+      return {
+        id: a.id, name: a.name, short: a.short, color: a.color, status, pct, note, ts,
+        conf: done ? a.conf + '%' : run ? Math.round(52 + 46 * pe) + '%' : '—',
+        eta: run ? '~' + Math.max(1, Math.ceil(a.dur * (1 - p))) + 's left' : done ? 'complete' : 'queued',
+        statusLabel: done ? 'Done' : run ? 'Working' : 'Queued',
+        pillBg: done ? 'rgba(34,197,94,0.12)' : run ? this.tint(a.color, 0.1) : 'rgba(100,116,139,0.08)',
+        pillColor: done ? '#16A34A' : run ? a.color : '#64748B',
+        showDone: done ? 'flex' : 'none',
+        showRun: run ? 'flex' : 'none',
+        showQueue: (!done && !run) ? 'flex' : 'none',
+        rowOp: status === 'queued' ? 0.45 : 1,
+        barW: pct + '%',
+        barDisplay: run ? 'block' : 'none',
+        railColor: done ? this.tint(a.color, 0.5) : '#E5EAF1',
+        railDisplay: a.id === 'qa' ? 'none' : 'block',
+        ringOffset: Math.round(106.8 * (1 - pct / 100) * 10) / 10,
+        avatarAnim: run ? 'breathe 2.2s ease-in-out infinite' : 'none',
+        avBg: this.tint(a.color, 0.12),
+        rightLabel: run ? pct + '%' : done ? ts : ''
+      };
+    });
+
+    const byId = {};
+    agents.forEach((a) => { byId[a.id] = a; });
+    const workAgents = agents.filter((a) => a.id !== 'intent' && a.id !== 'graph');
+    const doneCount = workAgents.filter((a) => a.status === 'done').length;
+    const runCount = workAgents.filter((a) => a.status === 'running').length;
+    const queueCount = workAgents.length - doneCount - runCount;
+    const overallPct = Math.round(agents.reduce((s, a) => s + a.pct, 0) / agents.length);
+    const allDone = t >= 28;
+    const phase = t < 3 ? 'Understanding your request…' : allDone ? 'Plan ready — €2,438 · €62 under budget' : 'Coordinating ' + runCount + ' agents in parallel…';
+
+    const appeared = this.EVENTS.filter((e) => e.t <= t);
+    const tickerEvents = appeared.slice(-4).reverse().map((e) => ({ time: this.clock(e.t), label: e.label }));
+
+    const ts2 = showToasts ? this.TOASTS.find((x) => t >= x.from && t < x.to) : null;
+    const toast = { op: ts2 ? 1 : 0, ty: ts2 ? '0px' : '14px', icon: ts2 ? ts2.icon : '✓', text: ts2 ? ts2.text : '' };
+    const hs = this.HANDOFFS.find((x) => t >= x.from && t < x.to);
+    const handoff = { op: hs ? 1 : 0, ty: hs ? '0px' : '14px', from: hs ? hs.a : '', to: hs ? hs.b : '', note: hs ? hs.note : '' };
+
+    const nodes = agents.filter((a) => a.id !== 'graph').map((a) => {
+      const pos = this.POS[a.id];
+      const c = this.DARKC[a.id] || a.color;
+      const done = a.status === 'done', run = a.status === 'running';
+      return {
+        cx: pos[0], cy: pos[1], ty: pos[1] + 4, ly: pos[1] + 41,
+        boxLeft: pos[0] - 24, boxTop: pos[1] - 24, labLeft: pos[0] - 40, labTop: pos[1] + 32,
+        short: a.short, label: this.NODEL[a.id], color: c,
+        rot: 'rotate(-90 ' + pos[0] + ' ' + pos[1] + ')',
+        fill: done ? this.tint(c, 0.18) : '#131A2B',
+        ringBase: done ? this.tint(c, 0.6) : 'rgba(148,163,184,0.25)',
+        ringOffset: Math.round(150.8 * (1 - a.pct / 100) * 10) / 10,
+        glow: done ? 'drop-shadow(0 0 7px ' + this.tint(c, 0.55) + ')' : 'none',
+        haloAnim: run ? 'haloPulse 1.8s ease-out infinite' : 'none',
+        haloOp: run ? 1 : 0,
+        txt: (done || run) ? '#F8FAFC' : 'rgba(148,163,184,0.7)',
+        labelColor: run ? c : done ? 'rgba(226,232,240,0.75)' : 'rgba(148,163,184,0.45)'
+      };
+    });
+
+    const edges = this.EDGES.map((pair) => {
+      const A = this.POS[pair[0]], B = this.POS[pair[1]];
+      const dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+      const d = 'M' + (A[0] + ux * 28).toFixed(1) + ' ' + (A[1] + uy * 28).toFixed(1) + ' L' + (B[0] - ux * 28).toFixed(1) + ' ' + (B[1] - uy * 28).toFixed(1);
+      const tgt = byId[pair[1]];
+      const active = tgt.status === 'running';
+      const done = tgt.status === 'done';
+      const c = this.DARKC[pair[1]] || tgt.color;
+      return {
+        d,
+        stroke: active ? c : done ? this.tint(c, 0.45) : 'rgba(148,163,184,0.16)',
+        dash: active ? '3 7' : '1 0',
+        anim: active ? 'flowDash 0.9s linear infinite' : 'none',
+        pktDisplay: active ? 'block' : 'none',
+        pcolor: c,
+        pathStr: "path('" + d + "')"
+      };
+    });
+
+    return {
+      agents, workAgents, nodes, edges, tickerEvents,
+      runCount, doneCount, queueCount, overallPct,
+      overallBarW: overallPct + '%',
+      phase, toast, handoff,
+      elapsedClock: this.clock(t),
+      viewPlanBg: allDone ? '#4F46E5' : '#EDF0F5',
+      viewPlanColor: allDone ? '#FFFFFF' : '#94A3B8',
+      viewPlanLabel: allDone ? 'View plan · €2,438' : 'Assembling plan…',
+      restart: () => this.setState({ t0: Date.now(), now: Date.now() })
+    };
+  }
+}
+</script>
+</body>
+</html>
